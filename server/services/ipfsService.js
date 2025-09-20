@@ -7,6 +7,12 @@ class IPFSService {
     this.pinataApiUrl = 'https://api.pinata.cloud';
     this.pinataApiKey = process.env.PINATA_API_KEY;
     this.pinataSecretKey = process.env.PINATA_SECRET_API_KEY;
+    
+    // Validate API keys on initialization
+    if (!this.pinataApiKey || !this.pinataSecretKey) {
+      console.warn('⚠️  Pinata API keys not configured. IPFS uploads will fail.');
+      console.warn('Please set PINATA_API_KEY and PINATA_SECRET_API_KEY in your .env file');
+    }
   }
 
   // ---------- Upload JSON ----------
@@ -22,8 +28,8 @@ class IPFSService {
       const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json',
-          pinata_api_key: this.pinataApiKey,
-          pinata_secret_api_key: this.pinataSecretKey
+          'pinata_api_key': this.pinataApiKey,
+          'pinata_secret_api_key': this.pinataSecretKey
         }
       });
 
@@ -34,6 +40,12 @@ class IPFSService {
       };
     } catch (err) {
       console.error('Error uploading JSON to IPFS:', err.response?.data || err.message);
+      
+      // Check if it's an authentication error
+      if (err.response?.status === 401) {
+        return { success: false, error: 'Invalid Pinata API credentials. Please check PINATA_API_KEY and PINATA_SECRET_KEY in .env file' };
+      }
+      
       return { success: false, error: err.message };
     }
   }
@@ -50,8 +62,8 @@ class IPFSService {
       const response = await axios.post(url, formData, {
         headers: {
           ...formData.getHeaders(),
-          pinata_api_key: this.pinataApiKey,
-          pinata_secret_api_key: this.pinataSecretKey
+          'pinata_api_key': this.pinataApiKey,
+          'pinata_secret_api_key': this.pinataSecretKey
         },
         maxContentLength: Infinity,
         maxBodyLength: Infinity
@@ -64,6 +76,12 @@ class IPFSService {
       };
     } catch (err) {
       console.error('Error uploading file to IPFS:', err.response?.data || err.message);
+      
+      // Check if it's an authentication error
+      if (err.response?.status === 401) {
+        return { success: false, error: 'Invalid Pinata API credentials. Please check PINATA_API_KEY and PINATA_SECRET_KEY in .env file' };
+      }
+      
       return { success: false, error: err.message };
     }
   }
