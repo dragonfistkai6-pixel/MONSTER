@@ -1,0 +1,121 @@
+# Hyperledger Fabric Peer Configuration
+peer:
+  # Peer ID
+  id: peer0.org1.herbionyx.com
+  
+  # Network ID
+  networkId: herbionyx-network
+  
+  # Address configuration
+  address: 0.0.0.0:7051
+  addressAutoDetect: false
+  
+  # Gossip configuration
+  gossip:
+    bootstrap: peer0.org1.herbionyx.com:7051
+    useLeaderElection: true
+    orgLeader: false
+    endpoint: peer0.org1.herbionyx.com:7051
+    externalEndpoint: peer0.org1.herbionyx.com:7051
+    
+  # TLS configuration
+  tls:
+    enabled: true
+    cert:
+      file: /etc/hyperledger/fabric/tls/server.crt
+    key:
+      file: /etc/hyperledger/fabric/tls/server.key
+    rootcert:
+      file: /etc/hyperledger/fabric/tls/ca.crt
+    clientAuthRequired: false
+    
+  # File system path for the peer
+  fileSystemPath: /var/hyperledger/production
+  
+  # MSP configuration
+  mspConfigPath: /etc/hyperledger/fabric/msp
+  localMspId: Org1MSP
+  
+  # BCCSP (Blockchain Crypto Service Provider) configuration
+  BCCSP:
+    Default: SW
+    SW:
+      Hash: SHA2
+      Security: 256
+      FileKeyStore:
+        KeyStore: /etc/hyperledger/fabric/msp/keystore
+    
+  # Ledger configuration
+  ledger:
+    blockchain:
+    state:
+      stateDatabase: CouchDB
+      couchDBConfig:
+        couchDBAddress: couchdb0:5984
+        username: admin
+        password: adminpw
+        maxRetries: 3
+        maxRetriesOnStartup: 12
+        requestTimeout: 35s
+        internalQueryLimit: 1000
+        maxBatchUpdateSize: 1000
+        warmIndexesAfterNBlocks: 1
+        createGlobalChangesDB: false
+        
+  # Operations configuration
+  operations:
+    listenAddress: 0.0.0.0:9444
+    tls:
+      enabled: false
+      
+  # Metrics configuration
+  metrics:
+    provider: prometheus
+    statsd:
+      network: udp
+      address: 127.0.0.1:8125
+      writeInterval: 10s
+      prefix:
+
+# VM configuration
+vm:
+  endpoint: unix:///var/run/docker.sock
+  docker:
+    tls:
+      enabled: false
+    attachStdout: false
+    
+# Chaincode configuration
+chaincode:
+  id:
+    path: /opt/gopath/src/github.com/chaincode/
+    name: mycc
+  golang:
+    runtime: golang
+    dynamicLink: false
+  car:
+    runtime: car
+  java:
+    runtime: java
+  node:
+    runtime: node
+  startuptimeout: 300s
+  executetimeout: 30s
+  mode: net
+  keepalive: 0
+  system:
+    _lifecycle: enable
+    cscc: enable
+    lscc: enable
+    escc: enable
+    vscc: enable
+    qscc: enable
+  logging:
+    level: info
+    shim: warning
+    format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'
+
+# Logging configuration - Updated to use FABRIC_LOGGING_SPEC
+logging:
+  spec: info
+  format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'

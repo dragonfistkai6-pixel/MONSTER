@@ -1,0 +1,34 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: herbionyx.com
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - localhost
+          - orderer.herbionyx.com
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+      OrganizationalUnit: Hyperledger Fabric
+      StreetAddress: address for org # default nil
+      PostalCode: postalCode for org # default nil
+
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.herbionyx.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+        - peer0.org1.herbionyx.com
+    Users:
+      Count: 1
+    CA:
+      Country: US
+      Province: California
+      Locality: San Francisco
+      OrganizationalUnit: Hyperledger Fabric
+      StreetAddress: address for org1 # default nil
+      PostalCode: postalCode for org1 # default nil

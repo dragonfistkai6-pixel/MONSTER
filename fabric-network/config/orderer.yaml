@@ -1,0 +1,103 @@
+# Hyperledger Fabric Orderer Configuration
+General:
+  # Listen address
+  ListenAddress: 0.0.0.0
+  ListenPort: 7050
+  
+  # TLS configuration
+  TLS:
+    Enabled: true
+    PrivateKey: /var/hyperledger/orderer/tls/server.key
+    Certificate: /var/hyperledger/orderer/tls/server.crt
+    RootCAs:
+      - /var/hyperledger/orderer/tls/ca.crt
+    ClientAuthRequired: false
+    ClientRootCAs:
+      - /var/hyperledger/orderer/tls/ca.crt
+      
+  # Cluster configuration
+  Cluster:
+    ClientCertificate: /var/hyperledger/orderer/tls/server.crt
+    ClientPrivateKey: /var/hyperledger/orderer/tls/server.key
+    RootCAs:
+      - /var/hyperledger/orderer/tls/ca.crt
+      
+  # Keepalive configuration
+  Keepalive:
+    ServerMinInterval: 60s
+    ServerInterval: 7200s
+    ServerTimeout: 20s
+    
+  # Connection timeout
+  ConnectionTimeout: 0s
+  
+  # Max message size
+  MaxRecvMsgSize: 104857600
+  MaxSendMsgSize: 104857600
+  
+  # Local MSP
+  LocalMSPDir: /var/hyperledger/orderer/msp
+  LocalMSPID: OrdererMSP
+  
+  # Profile
+  Profile:
+    Enabled: false
+    Address: 0.0.0.0:6060
+    
+  # BCCSP (Blockchain Crypto Service Provider)
+  BCCSP:
+    Default: SW
+    SW:
+      Hash: SHA2
+      Security: 256
+      FileKeyStore:
+        KeyStore: /var/hyperledger/orderer/msp/keystore
+        
+  # Authentication
+  Authentication:
+    TimeWindow: 15m
+
+# File ledger configuration
+FileLedger:
+  Location: /var/hyperledger/production/orderer
+  Prefix: hyperledger-fabric-ordererledger
+
+# Operations configuration
+Operations:
+  ListenAddress: 0.0.0.0:8443
+  TLS:
+    Enabled: false
+    Certificate:
+    PrivateKey:
+    ClientAuthRequired: false
+    ClientRootCAs: []
+
+# Metrics configuration
+Metrics:
+  Provider: prometheus
+  Statsd:
+    Network: udp
+    Address: 127.0.0.1:8125
+    WriteInterval: 30s
+    Prefix:
+
+# Consensus configuration
+Consensus:
+  WALDir: /var/hyperledger/production/orderer/etcdraft/wal
+  SnapDir: /var/hyperledger/production/orderer/etcdraft/snapshot
+
+# Channel participation
+ChannelParticipation:
+  Enabled: true
+  MaxRequestBodySize: 1048576
+
+# Admin configuration
+Admin:
+  ListenAddress: 0.0.0.0:7053
+  TLS:
+    Enabled: false
+    Certificate: /var/hyperledger/orderer/tls/server.crt
+    PrivateKey: /var/hyperledger/orderer/tls/server.key
+    ClientAuthRequired: false
+    ClientRootCAs:
+      - /var/hyperledger/orderer/tls/ca.crt
